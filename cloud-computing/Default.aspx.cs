@@ -22,7 +22,7 @@ namespace NearRestaurants
         static string googleAddressURL = "https://maps.googleapis.com/maps/api/geocode/json?address=";
         static string googleLatLongURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=";
         static string googleApiKey = "AIzaSyBaey0c8jLN07Wh2LaDe-RDSVSBt56J1V4";
-        static bool useGoogleKey = false;
+        static bool useGoogleKey = true;
         static List<string> nearbyRestaurants; 
 
         static Dictionary<string, List<string>> pinCodes = new Dictionary<string, List<string>>();
@@ -230,7 +230,7 @@ namespace NearRestaurants
                 if ( distance <= radiusInMiles)
                 {
                     distance = Math.Truncate(100 * distance) / 100;
-                    nearbyRestaurants.Add(restaurant+ "," + lat1.ToString() + "," + long1.ToString() + "," + distance + " Miles");
+                    nearbyRestaurants.Add(restaurant+ "," + lat1.ToString() + "," + long1.ToString() + ", ; Distance:" + distance + " Miles");
                 }
 
             }
@@ -307,6 +307,7 @@ namespace NearRestaurants
                     hiddenLatitude.InnerHtml = userRequest.latitude.ToString();
                     hiddenLongitude.InnerHtml = userRequest.longitude.ToString();
                 }
+                hiddenRadius.InnerHtml = radiusInMiles.ToString();
                 sw.Stop();
                 timeTaken = sw.Elapsed;
                 runDetails.InnerHtml = "Time taken: " + timeTaken.Minutes.ToString() + " minutes " + timeTaken.Seconds.ToString() + " seconds" +"\n"

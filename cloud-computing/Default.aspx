@@ -24,7 +24,7 @@
             if (mapLat == '') {
                 mapLat = 40.542130;
                 mapLong = -101.222317;
-                zoomMap = 4;
+                zoomMap = 5;
             }
             mapLat = parseFloat(mapLat);
             mapLong = parseFloat(mapLong);
@@ -33,7 +33,27 @@
                 zoom: zoomMap
             };
             var map = new google.maps.Map(document.getElementById('mapContainer'),
-            mapOptions);
+            mapOptions); 
+            var circleOptions = {
+                strokeColor: '#0000FF',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#0000FF',
+                fillOpacity: 0.15,
+                map: map,
+                center: { lat: mapLat, lng: mapLong },
+                radius: parseFloat(document.getElementById('hiddenRadius').innerHTML) * 1609.344
+                };
+                 // Add the circle for this city to the map.
+                                
+                mapCircle = new google.maps.Circle(circleOptions);
+                var manIcon = 'http://www.google.com/intl/en_us/mapfiles/ms/micons/man.png';
+                  var manMarker = new google.maps.Marker({
+      position: new google.maps.LatLng(mapLat, mapLong),
+      map: map,
+      icon: manIcon
+  });
+
 
             var restaurants = document.getElementById('hiddenMarkers').innerHTML;
             var locations = restaurants.split("\n");
@@ -57,9 +77,9 @@
 
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-                        var markerContent = markerOptions[0];
+                        var markerContent = locations[i].split(",")[0];
                         var space = " ";
-                        markerContent = markerContent.concat(space, markerOptions[3]);
+                        markerContent = markerContent.concat(space, locations[i].split(",")[3]);
                         infowindow.setContent(markerContent);
                         infowindow.open(map, marker);
                     }
@@ -98,8 +118,8 @@
             Restaurant finder</div>
         <div id="leftContainer" style="height: 100%; border-style: groove; border-width: medium;
             float: left; width: 20%; background-color: #C0C0C0;">
-            <form id="userForm" runat="server" 
-            style="border-bottom-style: groove; border-width: thin; margin-bottom: 10px; padding-bottom: 10px;">
+            <form id="userForm" runat="server" style="border-bottom-style: groove; border-width: thin;
+            margin-bottom: 10px; padding-bottom: 10px;">
             <p style="border-style: none; border-width: medium; padding: 10px">
                 Enter the address or coordinates of the location to find the nearby restuarants</p>
             <asp:RadioButton ID="addressEntry" Text="Address" Checked="True" GroupName="userLocation"
@@ -111,20 +131,27 @@
                 Style="margin: 10px; border-style: inset; border-width: medium; padding: 5px;" />
             <asp:TextBox ID="gpsLongBox" runat="server" placeholder="Enter longitude here..."
                 type="text" Style="margin: 10px; border-style: inset; border-width: medium; padding: 5px;" />
-                <p style="margin: 0px; border-style: none; border-width: medium; padding: 10px 10px 0px 10px;">Distance</p>
-                <asp:TextBox ID="distanceRadiusBox" runat="server" placeholder="Enter radius in miles here..."
+            <p style="margin: 0px; border-style: none; border-width: medium; padding: 10px 10px 0px 10px;">
+                Distance</p>
+            <asp:TextBox ID="distanceRadiusBox" runat="server" placeholder="Enter radius in miles here..."
                 type="text" Style="margin: 10px; border-style: inset; border-width: medium; padding: 5px;" />
             <asp:Button ID="submitButton" runat="server" Text="Submit" BackColor="Black" OnClick="Button1_Click"
                 ForeColor="White" Height="24px" Width="100px" />
             </form>
-            <div id="runDetails" runat="server" style="padding: 10px"></div>
+            <div id="runDetails" runat="server" style="padding: 10px">
+            </div>
         </div>
         <div id="mapContainer" style="height: 100%; border-style: groove; border-width: medium;
             padding: 10px">
         </div>
     </div>
-    <div id="hiddenMarkers" runat="server" style="visibility: hidden"></div>
-        <div id="hiddenLatitude" runat="server" style="visibility: hidden"></div>
-        <div id="hiddenLongitude" runat="server" style="visibility: hidden"></div>
+    <div id="hiddenMarkers" runat="server" style="visibility: hidden">
+    </div>
+    <div id="hiddenLatitude" runat="server" style="visibility: hidden">
+    </div>
+    <div id="hiddenLongitude" runat="server" style="visibility: hidden">
+    </div>
+    <div id="hiddenRadius" runat="server" style="visibility: hidden">
+    </div>
 </body>
 </html>
